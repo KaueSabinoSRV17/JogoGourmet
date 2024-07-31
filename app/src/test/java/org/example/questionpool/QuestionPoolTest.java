@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 public class QuestionPoolTest {
 
     static boolean isPasta = true;
-    static Food expectedFirstFood = new Food("Burguer", "Meat and cheese between 2 buns", !isPasta);
+    static Food expectedFirstFood = new Food("Burguer", "Meat and cheese between 2 buns");
 
     @Test
     @DisplayName("After starting a question stack with a burguer, its top should be a burger")
