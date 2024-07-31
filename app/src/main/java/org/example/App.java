@@ -12,7 +12,11 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import org.example.food.Food;
+import org.example.questionpool.QuestionPool;
 
 public class App {
     public String getGreeting() {
@@ -25,9 +29,15 @@ public class App {
         JButton startButton = new JButton();
         JPanel panel = new JPanel();
 
+        Food pastaFood = new Food("Lasanha", "N/A");
+        QuestionPool pastaPool = new QuestionPool(pastaFood);
+
+        Food chocolateCake = new Food("Bolo de Chocolate", "N/A");
+        QuestionPool nonPastaPool = new QuestionPool(chocolateCake);
+
         panel.add(label);
         panel.add(startButton);
-        panel.setPreferredSize(new Dimension(150, 50));
+        panel.setPreferredSize(new Dimension(150, 150));
         panel.setLayout(new FlowLayout());
 
         label.setText("Pense em prato que gosta");
@@ -36,7 +46,44 @@ public class App {
 
         startButton.setText("OK");
         startButton.setFocusable(false);
-        // startButton.addActionListener(event -> nextPage.setVisible(true));
+        startButton.addActionListener(event -> {
+            int pastaCode = JOptionPane.showConfirmDialog(null, "Sua comida é uma massa?", "Confirm", JOptionPane.YES_NO_OPTION);
+            boolean isPasta = pastaCode == 0;
+
+            if (isPasta) {
+                JOptionPane.showConfirmDialog(null, "Sua comida é Lasanha?", "Confirm", JOptionPane.YES_NO_OPTION);
+            } else {
+                while (true) {
+                    int questionCode = JOptionPane.showConfirmDialog(null,
+                            "Sua comida é " + nonPastaPool.askCurrentQuestion() + "?", "Confirm",
+                            JOptionPane.YES_NO_OPTION);
+                    if (questionCode == 0) {
+                        JOptionPane.showOptionDialog(
+                                null,
+                                "Acertei denovo!",
+                                "Jogo Gourmet",
+                                JOptionPane.OK_OPTION,
+                                JOptionPane.INFORMATION_MESSAGE,
+                                null,
+                                null,
+                                0);
+                        break;
+                    } else {
+                        if (nonPastaPool.getCurrentQuestionStack().size() == 1) {
+                            String name = JOptionPane.showInputDialog("Qual prato você pensou?");
+                            String clue = JOptionPane.showInputDialog(name + " é ________ mas "
+                                    + nonPastaPool.getCurrentQuestionStack().peek().getName() + " não.");
+                            Food correctAnswer = new Food(name, clue);
+                            nonPastaPool.addFood(correctAnswer);
+                            nonPastaPool.restartGame();
+                            break;
+                        } else {
+                            nonPastaPool.answerNoToCurrentQuestion();
+                        }
+                    }
+                }
+            }
+        });
 
         frame.setSize(280, 135);
         frame.setTitle("Jogo Gourmet");
