@@ -29,16 +29,10 @@ public class QuestionPoolTest {
         testQuestionPool.addFood(friedChicken);
         testQuestionPool.restartGame();
 
-        assertEquals(testQuestionPool.askCurrentQuestion(), friedChicken.getClue());
+        assertEquals(testQuestionPool.askCurrentQuestion(), String.format("Sua comida é %s?", friedChicken.getClue()));
 
         testQuestionPool.answerNoToCurrentQuestion();
-        assertEquals(testQuestionPool.askCurrentQuestion(), expectedFirstFood.getName());
+        assertEquals(testQuestionPool.askCurrentQuestion(), String.format("Sua comida é %s?", expectedFirstFood.getName()));
     }
-
-    // IT IS A STACK!!!!!
-    // After the first food is wrong, the list goes from newer to older, always
-    // asking by the clue first.
-    // when we get back to the first food suggested, it goes right to the name when
-    // asking it.
-
+    
 }

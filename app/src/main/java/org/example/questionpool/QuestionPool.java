@@ -29,15 +29,19 @@ public class QuestionPool {
         return food;
     }
 
+    public String revealFoodName() {
+        return String.format("Sua comida é %s?", currentQuestionStack.peek().getName());
+    }
+
     public String askCurrentQuestion() {
         if (currentQuestionStack.isEmpty())
             throw new EmptyStackException();
 
         Food currentQuestion = currentQuestionStack.peek();
         if (currentQuestionStack.size() == 1) {
-            return currentQuestion.getName();
+            return String.format("Sua comida é %s?", currentQuestion.getName());
         } else {
-            return currentQuestion.getClue();
+            return String.format("Sua comida é %s?", currentQuestion.getClue());
         }
     }
 
