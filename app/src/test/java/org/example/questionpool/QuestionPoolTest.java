@@ -12,37 +12,27 @@ import org.junit.jupiter.api.Test;
 public class QuestionPoolTest {
 
     static boolean isPasta = true;
-    static Food expectedFirstPastaFood = new Food("Carbonara",
-            "Spagheti like dish, with pork fat, parmegiano reggiano and eggs as sauce", isPasta);
-    static Food expectedFirstNonPastaFood = new Food("Burguer", "Meat and cheese between 2 buns", !isPasta);
+    static Food expectedFirstFood = new Food("Burguer", "Meat and cheese between 2 buns", !isPasta);
 
     @Test
-    @DisplayName("A game should start with Carbonara and a Burguer as its initial food")
-    void a_game_should_start_with_carbonara_and_a_burguer_as_its_initial_food() {
-        QuestionPool testQuestionPool = new QuestionPool();
-        Food resultFirstFood = testQuestionPool.getFoods().get(0);
-        Food resultSecondFood = testQuestionPool.getFoods().get(1);
-
-        assertEquals(expectedFirstPastaFood.getName(), resultFirstFood.getName());
-        assertEquals(expectedFirstPastaFood.getClue(), resultFirstFood.getClue());
-
-        assertEquals(expectedFirstNonPastaFood.getName(), resultSecondFood.getName());
-        assertEquals(expectedFirstNonPastaFood.getClue(), resultSecondFood.getClue());
+    @DisplayName("After starting a question stack with a burguer, its top should be a burger")
+    void after_starting_a_question_stack_with_a_burguer_its_top_should_be_a_burger() {
+        QuestionPool testQuestionPool = new QuestionPool(expectedFirstFood);
+        assertEquals(testQuestionPool.getCurrentQuestionStack().peek().getName(), expectedFirstFood.getName());
     }
 
     @Test
-    @DisplayName("A game should start with one pasta food and one non pasta food")
-    void a_game_should_start_with_one_pasta_food_and_one_non_pasta_food() {
-        QuestionPool testQuestionPool = new QuestionPool();
+    @DisplayName("After starting a question stack with a burguer, adding fried chicken and restarting the game, the current list should have both again")
+    void after_starting_a_question_stack_with_a_burguer_adding_fried_chicken_and_restarting_the_game_the_current_list_should_have_both_again() {
+        QuestionPool testQuestionPool = new QuestionPool(expectedFirstFood);
+        Food friedChicken = new Food("Fried Chicken", "farm bird deep fried");
+        testQuestionPool.addFood(friedChicken);
+        testQuestionPool.restartGame();
 
-        testQuestionPool.setPasta(true);
-        List<Food> resultPastaFoods = testQuestionPool.filteredFoods();
+        assertEquals(testQuestionPool.askCurrentQuestion(), friedChicken.getClue());
 
-        testQuestionPool.setPasta(false);
-        List<Food> resultPastaNonFoods = testQuestionPool.filteredFoods();
-
-        assertEquals(resultPastaFoods.size(), 1);
-        assertEquals(resultPastaNonFoods.size(), 1);
+        testQuestionPool.answerNoToCurrentQuestion();
+        assertEquals(testQuestionPool.askCurrentQuestion(), expectedFirstFood.getName());
     }
 
     // IT IS A STACK!!!!!

@@ -1,52 +1,52 @@
 package org.example.questionpool;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.EmptyStackException;
+import java.util.Stack;
 
 import org.example.food.Food;
 
 public class QuestionPool {
 
-    private List<Food> foods;
-    private boolean isPasta;
+    private Stack<Food> mainQuestionStack;
+    private Stack<Food> currentQuestionStack;
 
-    private void startGame() {
-        boolean isPasta = true;
-        Food firstPastaFood = new Food("Carbonara", "Spagheti like dish, with pork fat, parmegiano reggiano and eggs as sauce", isPasta);
-        Food firstNonPastaFood = new Food("Burguer", "Meat and cheese between 2 buns", !isPasta);
-
-        this.foods = new ArrayList<Food>();
-        this.foods.add(firstPastaFood);
-        this.foods.add(firstNonPastaFood);
+    public QuestionPool(Food firstFood) {
+        mainQuestionStack = new Stack<Food>();
+        currentQuestionStack = new Stack<Food>();
+        mainQuestionStack.add(firstFood);
+        currentQuestionStack.add(firstFood);
     }
 
-    public List<Food> filteredFoods() {
-        List<Food> filteredFoods = this.foods
-            .stream()
-            .filter(Food::isPasta)
-            .collect(Collectors.toList());
-        return filteredFoods;
+    public void addFood(Food food) {
+        mainQuestionStack.add(food);
     }
 
-    // Thinking of adding another constructor, that receives to food objects instead of fixed initial food
-    public QuestionPool() {
-        this.startGame();
+    public Food answerNoToCurrentQuestion() {
+        if (currentQuestionStack.isEmpty())
+            throw new EmptyStackException();
+
+        Food food = currentQuestionStack.pop();
+        return food;
     }
 
-    public List<Food> getFoods() {
-        return foods;
+    public String askCurrentQuestion() {
+        if (currentQuestionStack.isEmpty())
+            throw new EmptyStackException();
+
+        Food currentQuestion = currentQuestionStack.peek();
+        if (currentQuestionStack.size() == 1) {
+            return currentQuestion.getName();
+        } else {
+            return currentQuestion.getClue();
+        }
     }
 
-    public void setFoods(List<Food> foods) {
-        this.foods = foods;
+    public void restartGame() {
+        currentQuestionStack.clear();
+        currentQuestionStack.addAll(mainQuestionStack);
     }
 
-    public boolean isPasta() {
-        return isPasta;
-    }
-
-    public void setPasta(boolean isPasta) {
-        this.isPasta = isPasta;
+    public Stack<Food> getCurrentQuestionStack() {
+        return currentQuestionStack;
     }
 }
