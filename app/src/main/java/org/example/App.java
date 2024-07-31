@@ -3,12 +3,48 @@
  */
 package org.example;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        JFrame frame = new JFrame();
+        JLabel label = new JLabel();
+        JButton startButton = new JButton();
+        JPanel panel = new JPanel();
+
+        panel.add(label);
+        panel.add(startButton);
+        panel.setPreferredSize(new Dimension(150, 50));
+        panel.setLayout(new FlowLayout());
+
+        label.setText("Pense em prato que gosta");
+        label.setHorizontalAlignment(JLabel.CENTER);
+        label.setVerticalAlignment(JLabel.CENTER);
+
+        startButton.setText("OK");
+        startButton.setFocusable(false);
+        // startButton.addActionListener(event -> nextPage.setVisible(true));
+
+        frame.setSize(280, 135);
+        frame.setTitle("Jogo Gourmet");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.add(panel);
+        frame.setLayout(new FlowLayout(FlowLayout.CENTER));
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 }
